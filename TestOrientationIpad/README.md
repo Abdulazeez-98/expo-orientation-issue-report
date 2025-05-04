@@ -1,50 +1,26 @@
-# Welcome to your Expo app 👋
+## Issue with orientation listener in Apple iPad while using the OS "Split-View" feature
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+The app hangs then crashes when used in "Split-View" mode. The crash occurs after leaving the Split-View and then returning back.
 
-## Get started
+This video demonstrates the issue:
+https://youtu.be/TrnQc8IGpPM
 
-1. Install dependencies
+##### How to reproduce:
 
-   ```bash
-   npm install
-   ```
+1. Add an orientation listener anywhere in the app
+2. Open the app in Split-View
+3. Leaving both apps (swipe up or press home)
+4. Return back to them. The timing (quick vs long delay) doesn't seem to matter
+5. The app hangs (doesn't respond) then crashes
 
-2. Start the app
+##### Notes:
 
-   ```bash
-   npx expo start
-   ```
+- The provided code is basically the getting-started expo project with AppState and orientation listeners attached.
 
-In the output, you'll find options to open the app in a
+- Clearing the listener with useEffect doesn't seem to solve the issue.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- The issue doesn't occur in iPhone (at least in my testing) and doesn't occur while using the app stand-alone (no Split-View) in iPad.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- I noticed that as long as the orientation listener is attached, the app doesn't go to "background" state after leaving app. Normally, the app goes into "inactive" then to "background"
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- However, if I add an AppState listener to clear the orientation listener on "inactive" state, the issue doesn't occur.
